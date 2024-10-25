@@ -51,13 +51,13 @@
     .player-list li {
       font-size: 1.5em;
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
+      justify-content: space-between;
       margin: 10px 0;
+      flex-direction: row;
     }
     .player-list button {
       font-size: 0.8em;
-      margin-left: 15px;
       padding: 5px 10px;
     }
     .player-count {
@@ -67,8 +67,12 @@
     }
     .player-stats {
       font-size: 0.8em;
-      margin-top: 5px;
       color: #555;
+      margin-top: 5px;
+    }
+    .player-info {
+      display: flex;
+      flex-direction: column;
     }
   </style>
 </head>
@@ -90,7 +94,7 @@
     
     <!-- Section Joueurs -->
     <div class="section joueurs-section">
-      <h1>Joueurs <span id="playerCount" class="player-count">0</span></h1> <!-- Compteur de joueurs -->
+      <h1>Joueurs <span id="playerCount" class="player-count"></span></h1> <!-- Compteur de joueurs masqué si 0 -->
       <input type="text" id="playerInput" placeholder="Nom du joueur">
       <button onclick="addPlayer()">Ajouter joueur</button>
       <ul id="playerList" class="player-list"></ul> <!-- Liste des joueurs -->
@@ -132,7 +136,8 @@
     }
 
     function updatePlayerCount() {
-      document.getElementById("playerCount").textContent = playerCount;
+      const playerCountElement = document.getElementById("playerCount");
+      playerCountElement.textContent = playerCount > 0 ? playerCount : "";
     }
 
     function addPlayer() {
@@ -143,8 +148,18 @@
         // Crée un nouvel élément de liste pour le joueur
         const listItem = document.createElement("li");
 
+        // Crée un conteneur pour le nom et les stats du joueur
+        const playerInfo = document.createElement("div");
+        playerInfo.className = "player-info";
+
         // Ajoute le nom du joueur
-        listItem.textContent = playerInput;
+        playerInfo.innerHTML = `<strong>${playerInput}</strong>`;
+
+        // Ajoute les statistiques Gold et Étoiles
+        const stats = document.createElement("div");
+        stats.className = "player-stats";
+        stats.innerHTML = `<div>Gold: 0</div><div>Étoiles: 0</div>`;
+        playerInfo.appendChild(stats);
 
         // Crée un bouton "Supprimer" pour le joueur
         const deleteButton = document.createElement("button");
@@ -155,14 +170,9 @@
           updatePlayerCount();
         };
 
-        // Ajoute le bouton "Supprimer" au joueur
+        // Ajoute le conteneur joueur et stats et le bouton "Supprimer" dans l'élément de liste
+        listItem.appendChild(playerInfo);
         listItem.appendChild(deleteButton);
-
-        // Ajoute les statistiques Gold et Étoiles
-        const stats = document.createElement("div");
-        stats.className = "player-stats";
-        stats.innerHTML = `<div>Gold: 0</div><div>Étoiles: 0</div>`;
-        listItem.appendChild(stats);
 
         // Ajoute le nouvel élément de joueur à la liste
         playerList.appendChild(listItem);
