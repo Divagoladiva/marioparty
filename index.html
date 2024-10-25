@@ -49,8 +49,16 @@
       text-align: left;
     }
     .player-list li {
-      font-size: 1.2em;
+      font-size: 1.5em; /* Taille agrandie */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin: 5px 0;
+    }
+    .player-list button {
+      font-size: 0.8em;
+      margin-left: 15px; /* Décalage du bouton à droite */
+      padding: 5px 10px;
     }
   </style>
 </head>
@@ -119,8 +127,20 @@
 
         // Crée un nouvel élément de liste pour le joueur
         const listItem = document.createElement("li");
+
+        // Ajoute le nom du joueur
         listItem.textContent = playerInput;
 
+        // Crée un bouton "Supprimer" pour le joueur
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Supprimer";
+        deleteButton.onclick = function() {
+          playerList.removeChild(listItem);
+        };
+
+        // Ajoute le bouton "Supprimer" au joueur
+        listItem.appendChild(deleteButton);
+        
         // Ajoute le nouvel élément de joueur à la liste
         playerList.appendChild(listItem);
 
