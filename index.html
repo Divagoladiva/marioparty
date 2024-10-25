@@ -44,6 +44,14 @@
       padding: 10px;
       font-size: 1em;
     }
+    .player-list {
+      margin-top: 10px;
+      text-align: left;
+    }
+    .player-list li {
+      font-size: 1.2em;
+      margin: 5px 0;
+    }
   </style>
 </head>
 <body>
@@ -64,10 +72,10 @@
     
     <!-- Section Joueurs -->
     <div class="section joueurs-section">
-      <h1>Joueur</h1>
+      <h1>Joueurs</h1>
       <input type="text" id="playerInput" placeholder="Nom du joueur">
       <button onclick="addPlayer()">Ajouter joueur</button>
-      <div id="playerName" class="player-name"></div>
+      <ul id="playerList" class="player-list"></ul> <!-- Liste des joueurs -->
     </div>
   
   </div>
@@ -106,9 +114,18 @@
 
     function addPlayer() {
       const playerInput = document.getElementById("playerInput").value;
-      if (playerInput) {  // Vérifie que le champ de saisie n'est pas vide
-        document.getElementById("playerName").textContent = playerInput;
-        document.getElementById("playerInput").value = "";  // Efface le champ de saisie
+      if (playerInput) {
+        const playerList = document.getElementById("playerList");
+
+        // Crée un nouvel élément de liste pour le joueur
+        const listItem = document.createElement("li");
+        listItem.textContent = playerInput;
+
+        // Ajoute le nouvel élément de joueur à la liste
+        playerList.appendChild(listItem);
+
+        // Vide le champ de saisie
+        document.getElementById("playerInput").value = "";
       }
     }
   </script>
