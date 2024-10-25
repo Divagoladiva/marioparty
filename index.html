@@ -3,28 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tours et Joueurs</title>
+  <title>Mario Arrive</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      justify-content: center; /* Centre horizontalement */
+      align-items: center; /* Centre verticalement */
+      height: 100vh; /* Prend toute la hauteur de la fenêtre */
       margin: 0;
       background-color: #f5f5f5;
+      overflow: hidden; /* Empêche le débordement du corps */
+    }
+    .grid-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+      background-size: 50px 50px; /* Taille des cellules du quadrillage */
+      animation: moveGrid 5s linear infinite; /* Animation de mouvement du quadrillage */
+      z-index: 0; /* Assure que le quadrillage reste en arrière-plan */
+    }
+
+    @keyframes moveGrid {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 100px 100px; /* Déplace le quadrillage */
+      }
     }
     .main-container {
       display: flex;
-      gap: 40px;
+      flex-direction: row; /* Aligne les sections horizontalement */
+      height: 80%; /* Ajuste la hauteur pour laisser de l'espace */
+      width: 80%; /* Ajuste la largeur pour laisser de l'espace */
+      max-width: 1200px; /* Largeur maximale */
+      position: relative; /* Pour gérer le z-index */
+      z-index: 1; /* Assure que le contenu principal soit au-dessus du quadrillage */
     }
     .section {
       text-align: center;
+      padding: 10px;
+      flex-shrink: 0; /* Empêche les sections de rétrécir */
+      min-width: 150px; /* Largeur minimale pour chaque section */
+      max-width: 250px; /* Largeur maximale pour chaque section */
     }
-    .tours-section {
+    .joueurs-section {
+      flex: 1; /* Permet à cette section de grandir pour remplir l'espace restant */
+      overflow-y: auto; /* Permet de faire défiler le contenu des joueurs verticalement */
+      max-height: 400px; /* Augmente la hauteur maximale pour la section des joueurs */
+    }
+    .player-list {
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      flex-direction: column; /* Disposition verticale des joueurs */
+      justify-content: flex-start; /* Ajoute les joueurs du haut vers le bas */
+      padding: 10px; /* Ajout d'un remplissage pour une meilleure apparence */
     }
     .counter {
       font-size: 3em;
@@ -44,43 +81,78 @@
       padding: 10px;
       font-size: 1em;
     }
-    .player-list {
-      margin-top: 10px;
-      text-align: left;
-    }
-    .player-list li {
-      font-size: 1.5em;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 10px 0;
-      flex-direction: row;
-    }
-    .player-list button {
-      font-size: 0.8em;
-      padding: 5px 10px;
-    }
     .player-count {
-      font-size: 1em;
+      font-size: 1.5em; /* Augmente la taille du compteur de joueurs */
       margin-left: 5px;
       color: #333;
     }
     .player-stats {
-      font-size: 0.8em;
+      font-size: 1.2em; /* Augmente la taille des statistiques du joueur */
       color: #555;
       margin-top: 5px;
     }
     .player-info {
       display: flex;
       flex-direction: column;
+      flex-grow: 1; /* Permet au joueur d'utiliser l'espace restant */
+      align-items: center; /* Centre les éléments */
+      font-size: 1.5em; /* Augmente la taille du nom du joueur */
     }
-    .edit-buttons {
-      display: none; /* Masquer les boutons par défaut */
+    .sub-buttons {
+      display: none; /* Cacher par défaut les sous-boutons */
       margin-top: 5px;
+      flex-direction: row; /* Affiche les boutons en rangée */
+      gap: 10px; /* Espace entre les sous-boutons */
+      justify-content: space-between; /* Espace entre les boutons */
+      width: 100%; /* Prend toute la largeur disponible */
+      max-width: 250px; /* Limite la largeur des sous-boutons */
+    }
+    .button-container {
+      display: flex;
+      flex-direction: column; /* Pour que les boutons soient en colonne */
+      align-items: flex-end; /* Aligne les boutons à droite */
+    }
+    .button-container-main {
+      display: flex; /* Pour que les boutons principaux soient en ligne */
+      align-items: center; /* Aligner les boutons à la verticale */
+      gap: 5px; /* Espace entre les boutons principaux */
+    }
+    button {
+      font-size: 0.8em; /* Réduit la taille des boutons principaux */
+    }
+    .button-green {
+      background-color: green; /* Vert pour les boutons + */
+      color: white; /* Texte en blanc */
+    }
+    .button-red {
+      background-color: red; /* Rouge pour les boutons - */
+      color: white; /* Texte en blanc */
+    }
+    .leaderboard-section {
+      flex: 1; /* Permet à cette section de grandir pour remplir l'espace restant */
+      overflow-y: auto; /* Permet de faire défiler le contenu du classement */
+      max-width: 400px; /* Largeur maximale pour la section du classement */
+      padding: 10px;
+    }
+    .leaderboard {
+      list-style-type: none; /* Enlève les puces */
+      padding: 0; /* Enlève le remplissage */
+      margin: 0; /* Enlève la marge */
+    }
+    .leaderboard li {
+      font-size: 1.2em; /* Taille des éléments du classement */
+      margin: 5px 0; /* Espace entre les joueurs */
+      text-align: center; /* Centre le texte */
+    }
+    .stars-count, .gold-count {
+      font-size: 0.8em; /* Taille réduite pour le nombre d'étoiles et de golds */
+      color: #777; /* Couleur plus claire pour le nombre d'étoiles et de golds */
     }
   </style>
 </head>
 <body>
+  <div class="grid-background"></div> <!-- Éléments de quadrillage animé -->
+
   <div class="main-container">
     
     <!-- Section Tours -->
@@ -97,20 +169,42 @@
     </div>
     
     <!-- Section Joueurs -->
-    <div class="section joueurs-section">
-      <h1>Joueurs <span id="playerCount" class="player-count"></span></h1> <!-- Compteur de joueurs masqué si 0 -->
+    <div class="joueurs-section">
+      <h1>Joueurs <span id="playerCount" class="player-count"></span></h1>
       <input type="text" id="playerInput" placeholder="Nom du joueur">
       <button onclick="addPlayer()">Ajouter joueur</button>
       <ul id="playerList" class="player-list"></ul> <!-- Liste des joueurs -->
     </div>
-  
+    
+    <!-- Section Dés -->
+    <div class="section des-section">
+      <h1>Dés</h1>
+      <div class="counter" id="diceCounter">0</div>
+      <div class="buttons">
+        <div class="button-row">
+          <button onclick="decrementDice()">-</button>
+          <button onclick="incrementDice()">+</button>
+        </div>
+        <button onclick="rollDice()">Lancer</button>
+        <div id="rollResult" style="font-size: 1.5em; margin-top: 10px;"></div> <!-- Résultat du lancer -->
+      </div>
+    </div>
+
+    <!-- Section Leaderboard -->
+    <div class="leaderboard-section">
+      <h1>Leaderboard</h1>
+      <ul id="leaderboard" class="leaderboard"></ul> <!-- Liste du classement -->
+    </div>
+
   </div>
 
   <script>
     let count = 0;
+    let diceCount = 0; // Compteur pour les dés
     let referenceValue = 0;
     let isFractionMode = false;
     let playerCount = 0; // Compteur de joueurs
+    const players = []; // Tableau pour stocker les joueurs
 
     function updateDisplay() {
       if (isFractionMode) {
@@ -155,83 +249,231 @@
         // Crée un conteneur pour le nom et les stats du joueur
         const playerInfo = document.createElement("div");
         playerInfo.className = "player-info";
+        playerInfo.innerHTML = `<strong>${playerInput}</strong>`; // Affiche le nom du joueur
 
-        // Ajoute le nom du joueur
-        playerInfo.innerHTML = `<strong>${playerInput}</strong>`;
-
-        // Ajoute les statistiques Gold et Étoiles
+        // Crée un conteneur pour les statistiques du joueur (gold et étoiles)
         const stats = document.createElement("div");
         stats.className = "player-stats";
         stats.innerHTML = `
-          <div class="gold" onclick="showEditButtons('gold', this)">Gold: 0</div>
-          <div class="stars" onclick="showEditButtons('stars', this)">Étoiles: 0</div>
-          <div class="edit-buttons" data-stat="gold">
-            <button onclick="changeValue('gold', 1, this)">+</button>
-            <button onclick="changeValue('gold', -1, this)">-</button>
-          </div>
-          <div class="edit-buttons" data-stat="stars">
-            <button onclick="changeValue('stars', 1, this)">+</button>
-            <button onclick="changeValue('stars', -1, this)">-</button>
-          </div>
-        `;
+          <div>Gold: <span class="gold-value">0</span></div>
+          <div>Étoiles: <span class="stars-value">0</span></div>`;
         playerInfo.appendChild(stats);
 
-        // Crée un bouton "Supprimer" pour le joueur
+        // Crée un conteneur pour les boutons d'ajustement
+        const adjustmentContainer = document.createElement("div");
+        adjustmentContainer.className = "sub-buttons button-adjustment";
+
+        // Crée les boutons pour ajuster Gold
+        const goldPlus1Button = document.createElement("button");
+        goldPlus1Button.textContent = "+1 Gold";
+        goldPlus1Button.classList.add("button-green");
+        goldPlus1Button.onclick = function() {
+          const goldValue = listItem.querySelector(".gold-value");
+          goldValue.textContent = parseInt(goldValue.textContent) + 1;
+          updateLeaderboard(); // Met à jour le leaderboard
+        };
+
+        const goldMinus1Button = document.createElement("button");
+        goldMinus1Button.textContent = "-1 Gold";
+        goldMinus1Button.classList.add("button-red");
+        goldMinus1Button.onclick = function() {
+          const goldValue = listItem.querySelector(".gold-value");
+          if (parseInt(goldValue.textContent) > 0) {
+            goldValue.textContent = parseInt(goldValue.textContent) - 1;
+            updateLeaderboard(); // Met à jour le leaderboard
+          }
+        };
+
+        const goldPlus5Button = document.createElement("button");
+        goldPlus5Button.textContent = "+5 Gold";
+        goldPlus5Button.classList.add("button-green");
+        goldPlus5Button.onclick = function() {
+          const goldValue = listItem.querySelector(".gold-value");
+          goldValue.textContent = parseInt(goldValue.textContent) + 5;
+          updateLeaderboard(); // Met à jour le leaderboard
+        };
+
+        const goldMinus5Button = document.createElement("button");
+        goldMinus5Button.textContent = "-5 Gold";
+        goldMinus5Button.classList.add("button-red");
+        goldMinus5Button.onclick = function() {
+          const goldValue = listItem.querySelector(".gold-value");
+          if (parseInt(goldValue.textContent) >= 5) {
+            goldValue.textContent = parseInt(goldValue.textContent) - 5;
+            updateLeaderboard(); // Met à jour le leaderboard
+          }
+        };
+
+        const goldPlus10Button = document.createElement("button");
+        goldPlus10Button.textContent = "+10 Gold";
+        goldPlus10Button.classList.add("button-green");
+        goldPlus10Button.onclick = function() {
+          const goldValue = listItem.querySelector(".gold-value");
+          goldValue.textContent = parseInt(goldValue.textContent) + 10;
+          updateLeaderboard(); // Met à jour le leaderboard
+        };
+
+        const goldMinus10Button = document.createElement("button");
+        goldMinus10Button.textContent = "-10 Gold";
+        goldMinus10Button.classList.add("button-red");
+        goldMinus10Button.onclick = function() {
+          const goldValue = listItem.querySelector(".gold-value");
+          if (parseInt(goldValue.textContent) >= 10) {
+            goldValue.textContent = parseInt(goldValue.textContent) - 10;
+            updateLeaderboard(); // Met à jour le leaderboard
+          }
+        };
+
+        // Crée les boutons pour ajuster Étoiles
+        const starsPlusButton = document.createElement("button");
+        starsPlusButton.textContent = "+1 Étoile";
+        starsPlusButton.classList.add("button-green");
+        starsPlusButton.onclick = function() {
+          const starsValue = listItem.querySelector(".stars-value");
+          starsValue.textContent = parseInt(starsValue.textContent) + 1;
+          updateLeaderboard(); // Met à jour le leaderboard
+        };
+
+        const starsMinusButton = document.createElement("button");
+        starsMinusButton.textContent = "-1 Étoile";
+        starsMinusButton.classList.add("button-red");
+        starsMinusButton.onclick = function() {
+          const starsValue = listItem.querySelector(".stars-value");
+          if (parseInt(starsValue.textContent) > 0) {
+            starsValue.textContent = parseInt(starsValue.textContent) - 1;
+            updateLeaderboard(); // Met à jour le leaderboard
+          }
+        };
+
+        // Ajoute les boutons d'ajustement au conteneur
+        adjustmentContainer.appendChild(goldPlus1Button);
+        adjustmentContainer.appendChild(goldMinus1Button);
+        adjustmentContainer.appendChild(goldPlus5Button);
+        adjustmentContainer.appendChild(goldMinus5Button);
+        adjustmentContainer.appendChild(goldPlus10Button);
+        adjustmentContainer.appendChild(goldMinus10Button);
+        adjustmentContainer.appendChild(starsPlusButton);
+        adjustmentContainer.appendChild(starsMinusButton);
+
+        // Crée un conteneur pour les boutons principaux
+        const buttonContainer = document.createElement("div");
+        buttonContainer.className = "button-container-main";
+
+        // Ajoute le bouton de suppression
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Supprimer";
         deleteButton.onclick = function() {
           playerList.removeChild(listItem);
           playerCount--;
           updatePlayerCount();
+          updateLeaderboard(); // Met à jour le leaderboard après suppression
         };
 
-        // Ajoute le conteneur joueur et stats et le bouton "Supprimer" dans l'élément de liste
+        buttonContainer.appendChild(deleteButton);
+
+        // Ajoute le bouton Gold
+        const goldButton = document.createElement("button");
+        goldButton.textContent = "Gold";
+        goldButton.onclick = function() {
+          // Affiche uniquement les boutons d'ajustement pour Gold
+          adjustmentContainer.style.display = "flex"; // Affiche le conteneur d'ajustement
+          goldPlus1Button.style.display = "inline-block"; // Affiche +1 Gold
+          goldMinus1Button.style.display = "inline-block"; // Affiche -1 Gold
+          goldPlus5Button.style.display = "inline-block"; // Affiche +5 Gold
+          goldMinus5Button.style.display = "inline-block"; // Affiche -5 Gold
+          goldPlus10Button.style.display = "inline-block"; // Affiche +10 Gold
+          goldMinus10Button.style.display = "inline-block"; // Affiche -10 Gold
+          starsPlusButton.style.display = "none"; // Cache +Étoile
+          starsMinusButton.style.display = "none"; // Cache -Étoile
+        };
+        buttonContainer.appendChild(goldButton);
+        
+        // Ajoute le bouton Étoiles
+        const starsButton = document.createElement("button");
+        starsButton.textContent = "Étoiles";
+        starsButton.onclick = function() {
+          // Affiche uniquement les boutons d'ajustement pour Étoiles
+          adjustmentContainer.style.display = "flex"; // Affiche le conteneur d'ajustement
+          starsPlusButton.style.display = "inline-block"; // Affiche +Étoile
+          starsMinusButton.style.display = "inline-block"; // Affiche -Étoile
+          goldPlus1Button.style.display = "none"; // Cache +1 Gold
+          goldMinus1Button.style.display = "none"; // Cache -1 Gold
+          goldPlus5Button.style.display = "none"; // Cache +5 Gold
+          goldMinus5Button.style.display = "none"; // Cache -5 Gold
+          goldPlus10Button.style.display = "none"; // Cache +10 Gold
+          goldMinus10Button.style.display = "none"; // Cache -10 Gold
+        };
+        buttonContainer.appendChild(starsButton);
+
+        // Ajoute le conteneur d'ajustement, les infos du joueur et les boutons principaux à la liste
         listItem.appendChild(playerInfo);
-        listItem.appendChild(deleteButton);
-
-        // Ajoute le nouvel élément de joueur à la liste
+        listItem.appendChild(adjustmentContainer);
+        listItem.appendChild(buttonContainer);
+        
+        // Ajoute l'élément de liste au DOM
         playerList.appendChild(listItem);
-
-        // Incrémente et met à jour le compteur de joueurs
+        
+        // Incrémente le compteur de joueurs
         playerCount++;
         updatePlayerCount();
-
-        // Vide le champ de saisie
-        document.getElementById("playerInput").value = "";
+        updateLeaderboard(); // Met à jour le leaderboard après ajout
       }
+      // Réinitialise l'input
+      document.getElementById("playerInput").value = "";
     }
 
-    function showEditButtons(stat, element) {
-      // Récupérer tous les boutons d'édition et les masquer
-      const allEditButtons = document.querySelectorAll('.edit-buttons');
-      allEditButtons.forEach(buttons => {
-        buttons.style.display = 'none';
-      });
+    function incrementDice() {
+      diceCount++;
+      document.getElementById("diceCounter").textContent = diceCount;
+    }
 
-      // Afficher les boutons d'édition pour le stat correspondant
-      const editButtons = element.nextElementSibling.nextElementSibling; // Cibler la bonne section de boutons
-      if (editButtons) {
-        editButtons.style.display = 'flex';
+    function decrementDice() {
+      if (diceCount > 0) {
+        diceCount--;
       }
+      document.getElementById("diceCounter").textContent = diceCount;
+    }
+
+    function rollDice() {
+      const resultElement = document.getElementById("rollResult");
+      let total = 0;
+      for (let i = 0; i < diceCount; i++) {
+        total += Math.floor(Math.random() * 6) + 1; // Génère un nombre aléatoire entre 1 et 6
+      }
+      resultElement.textContent = `Résultat du lancer: ${total}`;
+    }
+
+    function updateLeaderboard() {
+      const leaderboard = document.getElementById("leaderboard");
+      leaderboard.innerHTML = ""; // Réinitialise le leaderboard
+      const playerList = document.querySelectorAll("#playerList li");
       
-      // Fermer les boutons d'édition si on clique en dehors
-      document.addEventListener('click', function handler(event) {
-        if (!element.contains(event.target) && !editButtons.contains(event.target)) {
-          editButtons.style.display = 'none';
-          document.removeEventListener('click', handler); // Supprime l'écouteur après utilisation
-        }
+      // Crée un tableau pour stocker les joueurs avec leurs étoiles et golds
+      const playersWithStars = [];
+      playerList.forEach(player => {
+        const playerName = player.querySelector(".player-info strong").textContent;
+        const starsValue = parseInt(player.querySelector(".stars-value").textContent);
+        const goldValue = parseInt(player.querySelector(".gold-value").textContent); // Récupère le nombre de golds
+        playersWithStars.push({ name: playerName, stars: starsValue, gold: goldValue });
       });
-    }
 
-    function changeValue(stat, change, button) {
-      const statElement = button.parentElement.previousElementSibling; // Cible le bon élément de statut
-      const currentValue = parseInt(statElement.textContent.split(': ')[1]);
+      // Trie les joueurs par étoiles (et gold en cas d'égalité)
+      playersWithStars.sort((a, b) => {
+        if (b.stars === a.stars) {
+          return b.gold - a.gold; // Si égalité, trie par gold
+        }
+        return b.stars - a.stars; // Trie par étoiles
+      });
 
-      if (currentValue + change >= 0) {
-        statElement.textContent = `${stat.charAt(0).toUpperCase() + stat.slice(1)}: ${currentValue + change}`;
-      }
+      // Affiche le classement
+      playersWithStars.forEach(player => {
+        const listItem = document.createElement("li");
+        listItem.innerHTML = `${player.name} <span class="stars-count">(${player.stars} étoiles, ${player.gold} gold)</span>`;
+        leaderboard.appendChild(listItem);
+      });
     }
   </script>
 </body>
 </html>
+
 
