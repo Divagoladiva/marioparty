@@ -74,6 +74,10 @@
       display: flex;
       flex-direction: column;
     }
+    .edit-buttons {
+      display: none; /* Masquer les boutons par défaut */
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body>
@@ -158,7 +162,18 @@
         // Ajoute les statistiques Gold et Étoiles
         const stats = document.createElement("div");
         stats.className = "player-stats";
-        stats.innerHTML = `<div>Gold: 0</div><div>Étoiles: 0</div>`;
+        stats.innerHTML = `
+          <div class="gold" onclick="showEditButtons('gold', this)">Gold: 0</div>
+          <div class="stars" onclick="showEditButtons('stars', this)">Étoiles: 0</div>
+          <div class="edit-buttons" data-stat="gold">
+            <button onclick="changeValue('gold', 1, this)">+</button>
+            <button onclick="changeValue('gold', -1, this)">-</button>
+          </div>
+          <div class="edit-buttons" data-stat="stars">
+            <button onclick="changeValue('stars', 1, this)">+</button>
+            <button onclick="changeValue('stars', -1, this)">-</button>
+          </div>
+        `;
         playerInfo.appendChild(stats);
 
         // Crée un bouton "Supprimer" pour le joueur
@@ -183,6 +198,37 @@
 
         // Vide le champ de saisie
         document.getElementById("playerInput").value = "";
+      }
+    }
+
+    function showEditButtons(stat, element) {
+      // Récupérer tous les boutons d'édition et les masquer
+      const allEditButtons = document.querySelectorAll('.edit-buttons');
+      allEditButtons.forEach(buttons => {
+        buttons.style.display = 'none';
+      });
+
+      // Afficher les boutons d'édition pour le stat correspondant
+      const editButtons = element.nextElementSibling.nextElementSibling; // Cibler la bonne section de boutons
+      if (editButtons) {
+        editButtons.style.display = 'flex';
+      }
+      
+      // Fermer les boutons d'édition si on clique en dehors
+      document.addEventListener('click', function handler(event) {
+        if (!element.contains(event.target) && !editButtons.contains(event.target)) {
+          editButtons.style.display = 'none';
+          document.removeEventListener('click', handler); // Supprime l'écouteur après utilisation
+        }
+      });
+    }
+
+    function changeValue(stat, change, button) {
+      const statElement = button.parentElement.previousElementSibling; // Cible le bon élément de statut
+      const currentValue = parseInt(statElement.textContent.split(': ')[1]);
+
+      if (currentValue + change >= 0) {
+        statElement.textContent = `${stat.charAt(0).toUpperCase() + stat.slice(1)}: ${currentValue + change}`;
       }
     }
   </script>
