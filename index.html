@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Compteur</title>
+  <title>Tours</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -34,7 +34,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Compteur</h1>
+    <h1>Tours</h1>
     <div class="counter" id="counter">0</div>
     <div class="buttons">
       <button onclick="decrement()">-</button>
@@ -51,7 +51,9 @@
     }
 
     function decrement() {
-      count--;
+      if (count > 0) {  // Empêche le compteur d'aller en dessous de zéro
+        count--;
+      }
       document.getElementById("counter").textContent = count;
     }
   </script>
