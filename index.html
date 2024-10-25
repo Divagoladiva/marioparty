@@ -24,6 +24,7 @@
     .buttons {
       display: flex;
       gap: 10px;
+      margin-bottom: 10px;
     }
     button {
       padding: 10px 20px;
@@ -40,21 +41,39 @@
       <button onclick="decrement()">-</button>
       <button onclick="increment()">+</button>
     </div>
+    <button onclick="resetToFraction()">Définir comme fraction (0/n)</button>
   </div>
 
   <script>
     let count = 0;
+    let referenceValue = 0;
+    let isFractionMode = false;
+
+    function updateDisplay() {
+      if (isFractionMode) {
+        document.getElementById("counter").textContent = `${count}/${referenceValue}`;
+      } else {
+        document.getElementById("counter").textContent = count;
+      }
+    }
 
     function increment() {
       count++;
-      document.getElementById("counter").textContent = count;
+      updateDisplay();
     }
 
     function decrement() {
-      if (count > 0) {  // Empêche le compteur d'aller en dessous de zéro
+      if (count > 0) {
         count--;
       }
-      document.getElementById("counter").textContent = count;
+      updateDisplay();
+    }
+
+    function resetToFraction() {
+      referenceValue = count;  // Définit le nombre actuel comme valeur de référence
+      count = 0;               // Réinitialise le compteur à 0
+      isFractionMode = true;   // Active le mode fraction
+      updateDisplay();
     }
   </script>
 </body>
