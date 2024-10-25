@@ -17,6 +17,16 @@
     .container {
       text-align: center;
     }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .player-name {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
     .counter {
       font-size: 3em;
       margin: 20px;
@@ -31,16 +41,20 @@
       display: flex;
       gap: 10px;
     }
-    button {
-      padding: 10px 20px;
+    button, input[type="text"] {
+      padding: 10px;
       font-size: 1em;
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Tours</h1>
+    <div class="header">
+      <h1>Tours</h1>
+      <input type="text" id="playerInput" placeholder="Nom du joueur">
+      <button onclick="addPlayer()">Ajouter joueur</button>
+    </div>
+    <div id="playerName" class="player-name"></div>
     <div class="counter" id="counter">0</div>
     <div class="buttons">
       <div class="button-row">
@@ -81,6 +95,14 @@
       count = 0;
       isFractionMode = true;
       updateDisplay();
+    }
+
+    function addPlayer() {
+      const playerInput = document.getElementById("playerInput").value;
+      if (playerInput) {  // Vérifie que le champ de saisie n'est pas vide
+        document.getElementById("playerName").textContent = playerInput;
+        document.getElementById("playerInput").value = "";  // Efface le champ de saisie
+      }
     }
   </script>
 </body>
