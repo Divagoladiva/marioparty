@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini-Jeux</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <button id="spinButton">Lancer la roue de la chance</button>
+    <div class="wheel-container">
+      <canvas id="wheelCanvas" width="300" height="300"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const segments = ["Minijeu1", "Minijeu2", "Minijeu3", "Minijeu4"];
+    const colors = ["#ff7675", "#74b9ff", "#55efc4", "#fdcb6e"];
+    const wheelCanvas = document.getElementById("wheelCanvas");
+    const ctx = wheelCanvas.getContext("2d");
+    const spinButton = document.getElementById("spinButton");
+    let angle = 0;
+    let spinning = false;
+
+    // Draw the wheel
+    function drawWheel() {
+      const wheelRadius = wheelCanvas.width / 2;
+      const arcSize = (2 * Math.PI) / segments.length;
+
+      ctx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
+      ctx.save();
+      ctx.translate(wheelRadius, wheelRadius);
+      
+      segments.forEach((segment, i) => {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, wheelRadius, i * arcSize, (i + 1) * arcSize);
+        ctx.fillStyle = colors[i];
+        ctx.fill();
+        ctx.stroke();
+        
+        ctx.save();
+        ctx.rotate((i + 0.5) * arcSize);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#2d3436";
+        ctx.font = "bold 16px Arial";
+        ctx.fillText(segment, wheelRadius - 10, 5);
+        ctx.restore();
+      });
+
+      ctx.restore();
+    }
+
+    drawWheel();
+
+    spinButton.addEventListener("click", () => {
+      if (spinning) return;
+      spinning = true;
+
+      const spinAngle = Math.random() * 360 + 720; // Random spin
+      const targetSegment = Math.floor(((360 - (spinAngle % 360)) / (360 / segments.length)) % segments.length);
+      const targetPage = `${segments[targetSegment]}.html`;
+
+      let start = 0;
+      const duration = 4000; // Spin duration
+      const startTime = performance.now();
+
+      function animateWheel(timestamp) {
+        const elapsed = timestamp - startTime;
+        const easing = Math.min(elapsed / duration, 1);
+        const easedSpin = easing * spinAngle;
+        angle = easedSpin % 360;
+
+        ctx.save();
+        ctx.translate(wheelCanvas.width / 2, wheelCanvas.height / 2);
+        ctx.rotate((angle * Math.PI) / 180);
+        ctx.translate(-wheelCanvas.width / 2, -wheelCanvas.height / 2);
+        drawWheel();
+        ctx.restore();
+
+        if (elapsed < duration) {
+          requestAnimationFrame(animateWheel);
+        } else {
+          spinning = false;
+          setTimeout(() => {
+            window.location.href = targetPage;
+          }, 500);
+        }
+      }
+
+      requestAnimationFrame(animateWheel);
+    });
+  </script>
+</body>
+</html>
