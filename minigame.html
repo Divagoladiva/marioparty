@@ -37,6 +37,17 @@
       width: 400px;
       height: 400px;
     }
+    .indicator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -240px);
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 20px solid #d63031;
+    }
     .result-display {
       margin-top: 20px;
       font-weight: bold;
@@ -59,6 +70,7 @@
   <div class="container">
     <button id="spinButton">Lancer la roue de la chance</button>
     <div class="wheel-container">
+      <div class="indicator"></div>
       <canvas id="wheelCanvas" width="400" height="400"></canvas>
     </div>
     <div id="resultDisplay" class="result-display"></div>
